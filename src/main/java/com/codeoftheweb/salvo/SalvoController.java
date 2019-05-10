@@ -1,6 +1,8 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,39 +17,8 @@ public class SalvoController {
     @Autowired
     private GameRepository repo;
 
-/*
-//punto 4)
-    @RequestMapping("/games")
-    public List<Long> getAll() {
-        List<Game> juegos;
-        List<Long> indice = new ArrayList<>();
-
-        juegos = repo.findAll();
-
-        for (Game juego:juegos) {
-            indice.add(juego.getId());
-        }
-        return indice;
-    }*/
-/*
-//punto 5)
-@RequestMapping("/games")
-// informacion para entender el punto el punto 5: https://mindhubweb.xtolcorp.com/ebooks/item?id=1169
-  public List<Object> getAllGames() {
-    return repo
-            .findAll()
-            .stream()
-            .map(game -> makeOwnerDTO(game))
-            .collect(Collectors.toList());
-            }
-
-  private Map<String, Object> makeOwnerDTO(Game game) {
-    Map<String, Object> dto = new LinkedHashMap<String, Object>();
-    dto.put("id", game.getId());
-    dto.put("created", game.getCreationDate());
-    return dto;
-    }
-*/
+    @Autowired
+    private GamePlayerRepository gamePlayerRepository;
 
     @RequestMapping("/games")
 // informacion para entender el punto el punto 5: https://mindhubweb.xtolcorp.com/ebooks/item?id=1169
@@ -67,9 +38,14 @@ public class SalvoController {
         return dto;
     }
 
+    public List<Map<String,Object>>getGamePlayerList(Set<GamePlayer> gamePlayers){
+        return gamePlayers.stream().map(gamePlayer -> makeGamePlayerDTO(gamePlayer)).collect(Collectors.toList());
+    }
+
     private Map<String, Object> makeGamePlayerDTO(GamePlayer gp) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", gp.getId());
+        //dto.put("joinDate",gp.getCreationDate());
         dto.put("player", makePlayerDTO(gp.getPlayer()));
         return dto;
     }
@@ -80,5 +56,23 @@ public class SalvoController {
         dto.put("email", p.getUserName());
         return dto;
     }
+
+    // tacke 3 punto 2
+    @RequestMapping("/game_view/{id}")
+    public Map<String,Object> getGamePlayerView(@PathVariable Long id){
+       return gameViewDTO(gamePlayerRepository.findById(id).get());
+    }
+
+    public Map<String, Object> gameViewDTO(GamePlayer gamePlayer){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("id", gamePlayer.getId());
+        dto.put("creationDate", gamePlayer.getCreationDate());
+        dto.put("gamePlayers", getGamePlayerList(gamePlayer.getGame().getGamePlayers()));
+        dto.put("ships",gamePlayer.getShips());
+
+        return dto;
+    }
+
+
 
 }
