@@ -17,7 +17,7 @@ public class SalvoApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(PlayerRepository playerRepository,GameRepository gameRepository,GamePlayerRepository gamePlayerRepository,ShipRepository shipRepository) {
+	public CommandLineRunner initData(PlayerRepository playerRepository,GameRepository gameRepository,GamePlayerRepository gamePlayerRepository,ShipRepository shipRepository, SalvoRepository salvoRepository) {
 		return (args) -> {
 			Player p1 = new Player("jbauer@ctu.gov");
 			Player p2 = new Player("c.obrian@ctu.gov");
@@ -40,12 +40,17 @@ public class SalvoApplication {
 			List<String> shipLocation4 = Arrays.asList("H7","H8","H9");
 			List<String> shipLocation5 = Arrays.asList("F4","F5","F6");
 
+			List<String> salvoLocation1 = Arrays.asList("A4","C5","F6");
+			List<String> salvoLocation2 = Arrays.asList("A1","B2","C3");
+
 			Ship ship1 = new Ship("cruiser",shipLocation1,gamePlayer1);
 			Ship ship2 = new Ship("Battleship ",shipLocation2,gamePlayer3);
 			Ship ship3 = new Ship("Submarine",shipLocation3,gamePlayer2);
 			Ship ship4 = new Ship("Destroyer",shipLocation4,gamePlayer1);
 			Ship ship5 = new Ship("Patrol Boat",shipLocation5,gamePlayer4);
 
+			Salvo salvo1 = new Salvo(gamePlayer1,1,salvoLocation1);
+			Salvo salvo2 = new Salvo(gamePlayer2,2,salvoLocation2);
 
 			// save a couple of customers
 
@@ -70,6 +75,10 @@ public class SalvoApplication {
 			shipRepository.save(ship3);
 			shipRepository.save(ship4);
 			shipRepository.save(ship5);
+
+			salvoRepository.save(salvo1);
+			salvoRepository.save(salvo2);
+
 
 
 		};
