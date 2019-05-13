@@ -42,6 +42,8 @@ public class SalvoApplication {
 
 			List<String> salvoLocation1 = Arrays.asList("A4","C5","F6");
 			List<String> salvoLocation2 = Arrays.asList("A1","B2","C3");
+			List<String> salvoLocation3 = Arrays.asList("H7","B1");
+			List<String> salvoLocation4 = Arrays.asList("H1","H3");
 
 			Ship ship1 = new Ship("cruiser",shipLocation1,gamePlayer1);
 			Ship ship2 = new Ship("Battleship ",shipLocation2,gamePlayer3);
@@ -50,7 +52,9 @@ public class SalvoApplication {
 			Ship ship5 = new Ship("Patrol Boat",shipLocation5,gamePlayer4);
 
 			Salvo salvo1 = new Salvo(gamePlayer1,1,salvoLocation1);
-			Salvo salvo2 = new Salvo(gamePlayer2,2,salvoLocation2);
+			Salvo salvo2 = new Salvo(gamePlayer2,1,salvoLocation2);
+			Salvo salvo3 = new Salvo(gamePlayer1,2,salvoLocation3);
+			Salvo salvo4 = new Salvo(gamePlayer2,2,salvoLocation4);
 
 			// save a couple of customers
 
@@ -78,8 +82,8 @@ public class SalvoApplication {
 
 			salvoRepository.save(salvo1);
 			salvoRepository.save(salvo2);
-
-
+			salvoRepository.save(salvo3);
+			salvoRepository.save(salvo4);
 
 		};
 	}

@@ -21,7 +21,7 @@ public class SalvoController {
     private GamePlayerRepository gamePlayerRepository;
 
     @RequestMapping("/games")
-// informacion para entender el punto el punto 5: https://mindhubweb.xtolcorp.com/ebooks/item?id=1169
+// informacion para entender el punto el punto 2.5: https://mindhubweb.xtolcorp.com/ebooks/item?id=1169
     public List<Object> getAllGames() {
         return repo
                 .findAll()
@@ -69,10 +69,30 @@ public class SalvoController {
         dto.put("creationDate", gamePlayer.getCreationDate());
         dto.put("gamePlayers", getGamePlayerList(gamePlayer.getGame().getGamePlayers()));
         dto.put("ships",gamePlayer.getShips());
+        dto.put("salvoes",getSalvoList(gamePlayer.getGame()));
 
         return dto;
     }
 
+    //point 4.2
 
+    private List<Map<String,Object>> getSalvoList(Game game) {
+        List<Map<String, Object>> myList = new ArrayList<>();
+        game.getGamePlayers().forEach(gamePlayer -> myList.addAll(makeSalvoList(gamePlayer.getSalvoes())));
+        return myList;
+    }
+
+    public List<Map<String,Object>> makeSalvoList(Set<Salvo> salvos){
+        return salvos.stream().map(salvo -> makeSalvoDTO(salvo)).collect(Collectors.toList());
+    }
+
+    public Map<String,Object> makeSalvoDTO(Salvo salvo){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("turn",salvo.getTurn());
+        dto.put("player",salvo.getGamePlayer().getId());
+        dto.put("locations",salvo.getLocations());
+
+        return dto;
+    }
 
 }

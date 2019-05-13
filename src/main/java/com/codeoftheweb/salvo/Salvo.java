@@ -41,7 +41,7 @@ public class Salvo {
     }
 
 
-    //@JsonIgnore
+    @JsonIgnore
     public GamePlayer getGamePlayer() {
         return gamePlayer;
     }
