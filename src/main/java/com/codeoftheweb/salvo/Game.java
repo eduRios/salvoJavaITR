@@ -27,6 +27,9 @@ public class Game {
     @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
     Set<GamePlayer> gamePlayers;
 
+    @OneToMany(mappedBy="game", fetch= FetchType.EAGER)
+    List<Score> scores;
+
     public Game(){
     }
 
@@ -60,4 +63,11 @@ public class Game {
         return id;
     }
 
+    public List<Score> getScores() {
+        return scores;
+    }
+
+    public void setScores(List<Score> scores) {
+        this.scores = scores;
+    }
 }
