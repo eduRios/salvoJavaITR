@@ -19,11 +19,11 @@ public class SalvoApplication {
 	@Bean
 	public CommandLineRunner initData(PlayerRepository playerRepository,GameRepository gameRepository,GamePlayerRepository gamePlayerRepository,ShipRepository shipRepository, SalvoRepository salvoRepository, ScoreRepository scoreRepository) {
 		return (args) -> {
-			Player p1 = new Player("jbauer@ctu.gov");
-			Player p2 = new Player("c.obrian@ctu.gov");
-			Player p3 = new Player("kim_bauer@gmail.com");
-			Player p4 = new Player("davidp@gmail.com");
-			Player p5 = new Player("mdessler@ctu.gov");
+			Player p1 = new Player("jbauer@ctu.gov","123");
+			Player p2 = new Player("c.obrian@ctu.gov","456");
+			Player p3 = new Player("kim_bauer@gmail.com","789");
+			Player p4 = new Player("davidp@gmail.com","abc");
+			Player p5 = new Player("mdessler@ctu.gov","asd");
 
 			Game game1 = new Game();
 			Game game2 = new Game(this.timeDifference(game1));
@@ -33,6 +33,9 @@ public class SalvoApplication {
 			GamePlayer gamePlayer2 = new GamePlayer(p2,game1);
 			GamePlayer gamePlayer3 = new GamePlayer(p1,game2);
 			GamePlayer gamePlayer4 = new GamePlayer(p5,game2);
+			GamePlayer gamePlayer5 = new GamePlayer(p3,game3);
+			GamePlayer gamePlayer6 = new GamePlayer(p4,game3);
+
 
 			List<String> shipLocation1 = Arrays.asList("H1","H2","H3");
 			List<String> shipLocation2 = Arrays.asList("A1","B1","C1");
@@ -83,6 +86,8 @@ public class SalvoApplication {
 			gamePlayerRepository.save(gamePlayer2);
 			gamePlayerRepository.save(gamePlayer3);
 			gamePlayerRepository.save(gamePlayer4);
+			gamePlayerRepository.save(gamePlayer5);
+			gamePlayerRepository.save(gamePlayer6);
 
 			shipRepository.save(ship1);
 			shipRepository.save(ship2);
