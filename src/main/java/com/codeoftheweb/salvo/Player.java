@@ -67,8 +67,8 @@ public class Player {
         this.scores = scores;
     }
 
-    public float getScore(Player player){
-        return 1;
+    public Score getScore(Game game) {
+        return scores.stream().filter(score -> score.getGame().getId() == game.getId()).findAny().orElse(null);
     }
 
 }

@@ -90,7 +90,8 @@ public class GamePlayer {
         this.salvoes = salvoes;
     }
 /*
-    public List<Score> getScore(){
-        return player.getScores();
+    public Score getScore () {
+        return this.player.getScore(this.game);
+    }
     }*/
 }

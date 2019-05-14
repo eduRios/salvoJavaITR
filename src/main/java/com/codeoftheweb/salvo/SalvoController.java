@@ -50,6 +50,29 @@ public class SalvoController {
         return dto;
     }
 
+    /*
+
+    Ok, la cosa es así en la clase GamePlayer deben crear un método llamado getScore y en la clase Player deben crear
+    un método llamado getScore también, el tema es que el getScore de player recibe un juego entonces ese método va a
+    hacer un stream de los gamePlayers de ese player para filtrarlo donde el game del gameplayer sea el mismo game que
+    le pasan por parámetro. Luuego en el método getScore de GamePlayer llaman al método getScore del player que tiene
+    ese GamePlayer pasandole el juego que tiene ese GamePlayer. Les paso el código
+
+    public Map<String, Object> makeGamePlayerDTO() {
+        Map<String, Object> dto = new LinkedHashMap<>();
+        dto.put("id", this.getId());
+        dto.put("player", this.player.makePlayerDTO());
+        dto.put("gameState", gameState());
+        dto.put("salvoTurn", currentTurn());
+        dto.put("shotsToMake", shotsToMake());
+        if (this.getScore() != null)
+            dto.put("score", this.getScore().getScorePoint());
+        else
+            dto.put("score", this.getScore());
+        return dto;
+    }
+     */
+
     private Map<String, Object> makePlayerDTO(Player p) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", p.getId());
