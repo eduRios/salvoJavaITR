@@ -66,9 +66,27 @@ public class Player {
     public void setScores(List<Score> scores) {
         this.scores = scores;
     }
+/*
 
+    punto 5.2
     public Score getScore(Game game) {
         return scores.stream().filter(score -> score.getGame().getId() == game.getId()).findAny().orElse(null);
     }
+*/
 
+    public float getScore(Player player) {
+        return getWins(player.getScores())+ getDraws(player.getScores())*(float)0.5 + getLoses(player.getScores())*0;
+    }
+
+    public float getWins(List<Score> scores){
+        return scores.stream().filter(score->score.getScore()==1).count();
+    }
+
+    public float getDraws(List<Score> scores){
+        return scores.stream().filter(score->score.getScore()==0.5).count();
+    }
+
+    public float getLoses(List<Score> scores){
+        return scores.stream().filter(score->score.getScore()==0).count();
+    }
 }
