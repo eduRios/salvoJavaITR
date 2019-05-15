@@ -1,10 +1,10 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.Mapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,7 +22,10 @@ public class SalvoController {
 
     @Autowired
     private PlayerRepository playerRepository;
-
+/*
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+*/
     @RequestMapping("/games")
 // informacion para entender el punto el punto 2.5: https://mindhubweb.xtolcorp.com/ebooks/item?id=1169
     public List<Object> getAllGames() {
@@ -96,8 +99,20 @@ public class SalvoController {
         dto.put("id", gamePlayer.getId());
         dto.put("creationDate", gamePlayer.getCreationDate());
         dto.put("gamePlayers", getGamePlayerList(gamePlayer.getGame().getGamePlayers()));
-        dto.put("ships",gamePlayer.getShips());
+        dto.put("ships",makeShipList(gamePlayer.getShips()));
         dto.put("salvoes",getSalvoList(gamePlayer.getGame()));
+
+        return dto;
+    }
+
+    //ships
+    public List<Map<String,Object>> makeShipList(Set<Ship> ships){
+        return ships.stream().map(ship -> makeShipDTO(ship)).collect(Collectors.toList());
+    }
+    public Map<String,Object> makeShipDTO(Ship ship){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("type",ship.getType());
+        dto.put("locations",ship.getLocations());
 
         return dto;
     }
@@ -170,4 +185,22 @@ public class SalvoController {
 
     }
 
+    //punto 5.3
+/*
+    @RequestMapping(path = "/player", method = RequestMethod.POST)
+    public ResponseEntity<Object> register(
+            @RequestParam String email, @RequestParam String password) {
+
+        if (email.isEmpty() || password.isEmpty()) {
+            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+        }
+
+        if (playerRepository.findByUserName(email) !=  null) {
+            return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
+        }
+
+        playerRepository.save(new Player(email, passwordEncoder.encode(password)));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+*/
 }
