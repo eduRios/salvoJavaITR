@@ -15,16 +15,16 @@ function updateViewGames(data) {
   }).join('');
   $("#game-list").html(htmlList);
   if(userData!="Guest"){
-    $("#user-info").text('Hello ' + userData.name + '!');
+    $("#user-info").text('Hello ' + userData.email + '!');
     showLogin(false);
   }
 }
 
 function getGameItem(gameData, userData){
-    var item = '<li class="list-group-item">'+ new Date(gameData.crationDate).toLocaleString() + ' ' + gameData.gamePlayers.map(function(p) { return p.player.email}).join(', ')  +'</li>';
+    var item = '<li class="list-group-item">'+ new Date(gameData.creationDate).toLocaleString() + ' ' + gameData.gamePlayers.map(function(p) { return p.player.email}).join(', ')  +'</li>';
     var idPlayerInGame = isPlayerInGame(userData.id,gameData);
     if (idPlayerInGame != -1)
-        item = '<li class="list-group-item"><a href="game_2.html?gp='+ idPlayerInGame + '">'+ new Date(gameData.crationDate).toLocaleString() + ' ' + gameData.gamePlayers.map(function(p) { return p.player.email}).join(', ')  +'</a></li>';
+        item = '<li class="list-group-item"><a href="game_2.html?gp='+ idPlayerInGame + '">'+ new Date(gameData.creationDate).toLocaleString() + ' ' + gameData.gamePlayers.map(function(p) { return p.player.email}).join(', ')  +'</a></li>';
     return item;
 }
 
@@ -39,7 +39,7 @@ function isPlayerInGame(idPlayer,gameData){
 
 function updateViewLBoard(data) {
   var htmlList = data.map(function (score) {
-      return  '<tr><td>' + score.name + '</td>'
+      return  '<tr><td>' + score.score.name + '</td>'
               + '<td>' + score.score.total + '</td>'
               + '<td>' + score.score.won + '</td>'
               + '<td>' + score.score.lost + '</td>'

@@ -11,18 +11,18 @@ $(function() {
 function updateViewGames(data) {
   var userTxt = data.player;
   var htmlList = data.games.map(function (games) {
-      return  '<li class="list-group-item">' + new Date(games.crationDate).toLocaleString() + ' ' + games.gamePlayers.map(function(p) { return p.player.email}).join(', ')  +'</li>';
+      return  '<li class="list-group-item">' + new Date(games.creationDate).toLocaleString() + ' ' + games.gamePlayers.map(function(p) { return p.player.email}).join(', ')  +'</li>';
   }).join('');
   $("#game-list").html(htmlList);
   if(userTxt!="Guest"){
-    $("#user-info").text('Hello ' + userTxt.name + '!');
+    $("#user-info").text('Hello ' + userTxt.username + '!');
     showLogin(false);
   }
 }
 
 function updateViewLBoard(data) {
   var htmlList = data.map(function (score) {
-      return  '<tr><td>' + score.name + '</td>'
+      return  '<tr><td>' + score.score.name + '</td>'
               + '<td>' + score.score.total + '</td>'
               + '<td>' + score.score.won + '</td>'
               + '<td>' + score.score.lost + '</td>'
