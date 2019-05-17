@@ -22,7 +22,7 @@ public class Player {
     Set<GamePlayer> gamePlayers;
 
     @OneToMany(mappedBy="player", fetch= FetchType.EAGER)
-    List<Score> scores;
+    Set<Score> scores;
 
 
     public Player(){}
@@ -64,11 +64,11 @@ public class Player {
         this.gamePlayers = gamePlayers;
     }
 
-    public List<Score> getScores() {
+    public Set<Score> getScores() {
         return scores;
     }
 
-    public void setScores(List<Score> scores) {
+    public void setScores(Set<Score> scores) {
         this.scores = scores;
     }
 
@@ -80,27 +80,20 @@ public class Player {
         this.password = password;
     }
 
-    /*
-
-    punto 5.2
-    public Score getScore(Game game) {
-        return scores.stream().filter(score -> score.getGame().getId() == game.getId()).findAny().orElse(null);
-    }
-*/
 
     public float getScore(Player player) {
         return getWins(player.getScores())+ getDraws(player.getScores())*(float)0.5 + getLoses(player.getScores())*0;
     }
 
-    public float getWins(List<Score> scores){
+    public float getWins(Set<Score> scores){
         return scores.stream().filter(score->score.getScore()==1).count();
     }
 
-    public float getDraws(List<Score> scores){
+    public float getDraws(Set<Score> scores){
         return scores.stream().filter(score->score.getScore()==0.5).count();
     }
 
-    public float getLoses(List<Score> scores){
+    public float getLoses(Set<Score> scores){
         return scores.stream().filter(score->score.getScore()==0).count();
     }
 }

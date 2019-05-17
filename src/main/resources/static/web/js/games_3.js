@@ -15,7 +15,7 @@ function updateViewGames(data) {
   }).join('');
   $("#game-list").html(htmlList);
   if(userTxt!="Guest"){
-    $("#user-info").text('Hello ' + userTxt.username + '!');
+    $("#user-info").text('Hello ' + userTxt.email + '!');
     showLogin(false);
   }
 }

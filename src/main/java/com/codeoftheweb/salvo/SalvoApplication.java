@@ -175,7 +175,7 @@ class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 				.antMatchers( "/api/games.").permitAll()
 				.antMatchers( "/api/players").permitAll()
 				.antMatchers( "/api/game_view/*").hasAuthority("user")
-				.antMatchers( "/rest/*").denyAll()
+				.antMatchers( "/rest/*").permitAll()
 				.anyRequest().permitAll();
 
 		http.formLogin()
