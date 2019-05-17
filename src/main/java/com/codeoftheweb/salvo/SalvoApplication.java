@@ -61,7 +61,7 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			GamePlayer gamePlayer3 = new GamePlayer(p1,game2);
 			GamePlayer gamePlayer4 = new GamePlayer(p5,game2);
 			GamePlayer gamePlayer5 = new GamePlayer(p3,game3);
-			GamePlayer gamePlayer6 = new GamePlayer(p4,game3);
+			GamePlayer gamePlayer6 = new GamePlayer(p5,game3);
 
 
 			List<String> shipLocation1 = Arrays.asList("H1","H2","H3");
@@ -79,21 +79,26 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Ship ship2 = new Ship("Battleship ",shipLocation2,gamePlayer3);
 			Ship ship3 = new Ship("Submarine",shipLocation3,gamePlayer2);
 			Ship ship4 = new Ship("Destroyer",shipLocation4,gamePlayer1);
-			Ship ship5 = new Ship("Patrol Boat",shipLocation5,gamePlayer4);
+			Ship ship5 = new Ship("Patrol Boat",shipLocation5,gamePlayer6);
+			Ship ship6 = new Ship("cruiser",shipLocation1,gamePlayer5);
 
 			Salvo salvo1 = new Salvo(gamePlayer1,1,salvoLocation1);
 			Salvo salvo2 = new Salvo(gamePlayer2,1,salvoLocation2);
 			Salvo salvo3 = new Salvo(gamePlayer1,2,salvoLocation3);
-			Salvo salvo4 = new Salvo(gamePlayer2,2,salvoLocation4);
+			Salvo salvo4 = new Salvo(gamePlayer3,2,salvoLocation4);
+			Salvo salvo5 = new Salvo(gamePlayer6,1,salvoLocation4);
+			Salvo salvo6 = new Salvo(gamePlayer5,1,salvoLocation2);
 
 			Date finishDate = new Date();
 
 
 
 			Score score1 = new Score(p1,game1,1,finishDate);
-			Score score2 = new Score(p2,game1,(float)0.5,finishDate);
-			Score score3 = new Score(p1,game1,0,finishDate);
-			Score score4 = new Score(p2,game1,(float)0.5,finishDate);
+			Score score2 = new Score(p1,game2,(float)0.5,finishDate);
+			Score score3 = new Score(p2,game1,0,finishDate);
+			Score score4 = new Score(p5,game2,(float)0.5,finishDate);
+			Score score5 = new Score(p3,game3,(float)0.5,finishDate);
+			Score score6 = new Score(p5,game3,(float)0.5,finishDate);
 
 
 			// save a couple of customers
@@ -121,16 +126,21 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			shipRepository.save(ship3);
 			shipRepository.save(ship4);
 			shipRepository.save(ship5);
+			shipRepository.save(ship6);
 
 			salvoRepository.save(salvo1);
 			salvoRepository.save(salvo2);
 			salvoRepository.save(salvo3);
 			salvoRepository.save(salvo4);
+			salvoRepository.save(salvo5);
+			salvoRepository.save(salvo6);
 
 			scoreRepository.save(score1);
 			scoreRepository.save(score2);
 			scoreRepository.save(score3);
 			scoreRepository.save(score4);
+			scoreRepository.save(score5);
+			scoreRepository.save(score6);
 
 		};
 	}
@@ -179,8 +189,8 @@ class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 				.anyRequest().permitAll();
 
 		http.formLogin()
-				.usernameParameter("username")
-				.passwordParameter("password")
+				.usernameParameter("name")
+				.passwordParameter("pwd")
 				.loginPage("/api/login");
 
 		http.logout().logoutUrl("/api/logout");

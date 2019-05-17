@@ -17,11 +17,11 @@ public class GamePlayer {
     private Date creationDate = new Date();
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="player_id")
+    @JoinColumn(name="playerid")
     private Player player;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_id")
+    @JoinColumn(name="gameid")
     private Game game;
 
     @OneToMany(mappedBy="gamePlayer", fetch= FetchType.EAGER)

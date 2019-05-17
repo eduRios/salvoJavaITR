@@ -62,13 +62,13 @@ public class SalvoController {
     private Map<String, Object> gameViewDTO(Game game) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", game.getId());
-        dto.put("creationDate", game.getCreationDate().getTime());
+        dto.put("creationDate", game.getCreationDate());
         dto.put("gamePlayers", getGamePlayerList(game.getGamePlayers()));
-        dto.put("salvoes", getSalvoList(game));
+        dto.put("scores", getScoreList(game.getScores()));
         return dto;
     }
 
-    @RequestMapping("/game_view/{id}") //dice que devo llamar a game_view cuando recibo get para url
+    @RequestMapping("/game_view/{id}")
     private Map<String, Object> getGames(@PathVariable Long id) {
         return  gamePlayerViewDTO(gamePlayerRepository.findById(id).get());
     }
@@ -100,7 +100,7 @@ public class SalvoController {
 
     private Map<String, Object> makeGamePlayerDTO(GamePlayer gamePlayer) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        dto.put("id", gamePlayer.getId());
+        dto.put("gpid", gamePlayer.getId());
         dto.put("player", makePlayerDTO(gamePlayer.getPlayer()));
         return dto;
     }
@@ -149,7 +149,7 @@ public class SalvoController {
 
     public Map<String, Object> ScoreDTO(Score score){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        dto.put("name", score.getPlayer().getUserName());
+        dto.put("playerID", score.getPlayer().getId());
         dto.put("score", score.getScore());
         dto.put("finishDate", score.getFinishDate());
         return dto;
@@ -191,4 +191,47 @@ public class SalvoController {
             return (playerRepository.findByUserName(authentication.getName()));
         }
     }
+
+    //crea el juego solicitado
+    @RequestMapping(path = "/games", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> createJuego(Authentication authentication) {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        Player authenticatedPlayer = getAuthentication(authentication);
+        if (authenticatedPlayer == null) {
+            return new ResponseEntity<>(makeMap("error","No name given"), HttpStatus.FORBIDDEN);
+        } else {
+            Date date = Date.from(java.time.ZonedDateTime.now().toInstant());
+            Game auxGame = new Game(date);
+            gameRepository.save(auxGame);
+
+            GamePlayer auxGameP = new GamePlayer(authenticatedPlayer, auxGame);
+            gamePlayerRepository.save(auxGameP);
+            return new ResponseEntity<>(makeMap("gpid", auxGameP.getId()), HttpStatus.CREATED);
+        }
+    }
+
+    private Map<String, Object> makeMap(String key, Object value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put(key, value);
+        return map;
+    }
+
+    /*
+    @RequestMapping(path = "/games", method = RequestMethod.POST)
+   public ResponseEntity<Map<String, Object>> createJuego(Authentication authentication) {
+       authentication = SecurityContextHolder.getContext().getAuthentication();
+       Player authenticatedPlayer = getAuthentication(authentication);
+       if(authenticatedPlayer == null){
+           return new ResponseEntity<>(makeMap("error","No name given"), HttpStatus.FORBIDDEN);
+       } else {
+           Date date = Date.from(java.time.ZonedDateTime.now().toInstant());
+           Game auxGame = new Game(date);
+           gameRepository.save(auxGame);
+
+           GamePlayer auxGameP = new GamePlayer(authenticatedPlayer,auxGame,date);
+           gamePlayerRepository.save(auxGameP);
+           return new ResponseEntity<>(makeMap("gpid", auxGameP.getId()), HttpStatus.CREATED);
+       }
+   }
+     */
 }
