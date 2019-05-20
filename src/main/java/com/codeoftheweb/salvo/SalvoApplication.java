@@ -19,7 +19,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -171,7 +171,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
     });
   }
 }
-
+//PUNTO 1 MODULO 5
 //@RequestMapping("/api")
 @EnableWebSecurity
 @Configuration
@@ -184,7 +184,7 @@ class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 				.antMatchers( "/web/**").permitAll()
 				.antMatchers( "/api/games.").permitAll()
 				.antMatchers( "/api/players").permitAll()
-				.antMatchers( "/api/game_view/*").hasAuthority("user")
+				.antMatchers( "/api/game_view/*").hasAuthority("USER")
 				.antMatchers( "/rest/*").permitAll()
 				.anyRequest().permitAll();
 
@@ -218,4 +218,5 @@ class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
 			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 		}
 	}
+
 }
