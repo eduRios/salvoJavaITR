@@ -9,6 +9,7 @@ var salvoJSON;
 var salvoPositions = [];
 var waitState = false;
 
+postShipLocations(makePostUrl());
 refreshGameView(makeUrl());
 
 $('#logoutButton').on('click', function (event) {
@@ -291,7 +292,9 @@ function createTable(player) {
 function postShipLocations (postUrl) {
     $.post({
         url: postUrl,
-        data: shipsJSON,
+        //data: shipsJSON,
+        data: JSON.stringify([{type: "destroyer", locations: ["A1", "A2", "A3"]},{type: "destroyer", locations: ["A1", "A2", "A3"]}]),
+
         dataType: "text",
         contentType: "application/json"
     })

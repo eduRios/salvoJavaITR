@@ -41,7 +41,7 @@ $('#login-form').on('submit', function (event) {
 
     } else if (submitButton == "signup") {
         $.post("/api/players",
-            { email: $("#username").val(),
+            { username: $("#username").val(), //cambie email a username
                 password: $("#password").val() })
             .done(function(data) {
                 console.log("signup ok");
@@ -205,7 +205,7 @@ function showGamesTable(gamesData) {
 
                 }
                 if (gamesData[i].gamePlayers[j].player.id == data.player.id) {
-                    gpid = gamesData[i].gamePlayers[j].id;
+                    gpid = gamesData[i].gamePlayers[j].gpid;
                     isLoggedPlayer = true;
                 }
             }
