@@ -198,7 +198,8 @@ public class SalvoController {
         authentication = SecurityContextHolder.getContext().getAuthentication();
         Player authenticatedPlayer = getAuthentication(authentication);
         if (authenticatedPlayer == null) {
-            return new ResponseEntity<>(makeMap("error","No Autorizado"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(makeMap("error","No esta Registrado"), HttpStatus.FORBIDDEN);
+            //FORBIDDEN: si esta solicitud no está permitida, sin importar qué autorización
         } else {
             Date date = Date.from(java.time.ZonedDateTime.now().toInstant());
             Game auxGame = new Game(date);
@@ -206,7 +207,7 @@ public class SalvoController {
 
             GamePlayer auxGameP = new GamePlayer(authenticatedPlayer, auxGame);
             gamePlayerRepository.save(auxGameP);
-            return new ResponseEntity<>(makeMap("gpid", auxGameP.getId()), HttpStatus.CREATED);
+            return new ResponseEntity<>(makeMap("gpid", auxGameP.getId()), HttpStatus.CREATED);//si se agregaron nuevos datos
         }
     }
 
@@ -221,11 +222,21 @@ public class SalvoController {
     public ResponseEntity<Map<String, Object>> joinGame(@PathVariable Long nn,Authentication authentication) {
         authentication = SecurityContextHolder.getContext().getAuthentication();
         Player authenticatedPlayer = getAuthentication(authentication);
+        Game game = gameRepository.findById(nn).get();
         if(authenticatedPlayer == null){
-            return new ResponseEntity<>(makeMap("error","No autorizado"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(makeMap("error","Usuario No autorizado"), HttpStatus.UNAUTHORIZED);
+        }
+        //no es necesario por ahora
+        if (game == null){
+            return new ResponseEntity<>(makeMap("error", "El Juego no Existe"), HttpStatus.FORBIDDEN);
+        }
+        //no es necesario por ahora
+        List<Player> list = game.getPlayers();
+        if (list.size() > 2){
+            return new ResponseEntity<>(makeMap("error", "El juego excede en jugadores"), HttpStatus.FORBIDDEN);
         }
 
-        GamePlayer auxGameP = new GamePlayer(authenticatedPlayer,gameRepository.findById(nn).get());
+        GamePlayer auxGameP = new GamePlayer(authenticatedPlayer,game);
         gamePlayerRepository.save(auxGameP);
         return new ResponseEntity<>(makeMap("gpid", auxGameP.getId()), HttpStatus.CREATED);
     }
