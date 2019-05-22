@@ -90,4 +90,9 @@ public class GamePlayer {
         this.salvoes = salvoes;
     }
 
+    public void addSalvo(Salvo salvo) {
+        salvo.setGamePlayer(this);
+        this.salvoes.add(salvo);
+    }
+
 }

@@ -30,6 +30,8 @@ public class SalvoController {
     PasswordEncoder passwordEncoder;
     @Autowired
     private ShipRepository shipRepository;
+    @Autowired
+    private SalvoRepository salvoRepository;
 
     @RequestMapping("/games")
     public Map<String, Object> makeLogedPlayer(Authentication authentication) {
@@ -113,7 +115,7 @@ public class SalvoController {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("id", player.getId());
         dto.put("email", player.getUserName());
-        dto.put("score", player.getScore(player));
+        dto.put("score", player.getScore(player)); //makeScoreDTO(player)
         return dto;
     }
 
@@ -122,6 +124,7 @@ public class SalvoController {
         dto.put("gpid", gamePlayer.getId());
         dto.put("player", makePlayerDTO(gamePlayer.getPlayer()));
         dto.put("ships", getShipsList(gamePlayer.getShips()));
+        dto.put("salvoes",getSalvoList(gamePlayer.getGame()));
         return dto;
     }
     private List<Object> getPlayerList(){
@@ -133,7 +136,7 @@ public class SalvoController {
 
     private Map<String, Object> makeSalvoDTO(Salvo salvo) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
-        dto.put("turn", salvo.getId());
+        dto.put("turn", salvo.getTurn());
         dto.put("player", salvo.getGamePlayer().getPlayer().getId());
         dto.put("locations", salvo.getLocations());
         return dto;
@@ -295,8 +298,8 @@ public class SalvoController {
         Boolean correctGP = gamePlayer.getPlayer().getId() != player.getId();
         return correctGP;
     }
-/*
-    @RequestMapping(path = "/games/players/{gamePlayerId}/salvos", method = RequestMethod.POST)
+
+    @RequestMapping(path = "/games/players/{gamePlayerId}/salvoes", method = RequestMethod.POST)
     public ResponseEntity<Map<String, Object>> addSalvo(@PathVariable Long gamePlayerId,@RequestBody Salvo salvo, Authentication authentication) {
         authentication = SecurityContextHolder.getContext().getAuthentication();
         Player authenticatedPlayer = getAuthentication(authentication);
@@ -306,13 +309,23 @@ public class SalvoController {
             return new ResponseEntity<>(makeMap("error", "no player logged in"), HttpStatus.UNAUTHORIZED);
         if (gamePlayer == null)
             return new ResponseEntity<>(makeMap("error", "no such gamePlayer"), HttpStatus.UNAUTHORIZED);
-        if (!mismoTurn(gamePlayer,salvo))
-            return new ResponseEntity<>(makeMap("error", "Player already has ships"), HttpStatus.FORBIDDEN);
 
+        if (wrongGamePlayer(gamePlayerId, gamePlayer, authenticatedPlayer)) {
+            return new ResponseEntity<>(makeMap("error", "Wrong GamePlayer"), HttpStatus.UNAUTHORIZED);
+        }
+        if(equalTurn(gamePlayer,salvo)){
+
+            return new ResponseEntity<>(makeMap("error", "Player already has ships"), HttpStatus.FORBIDDEN);
+        }else{
+        //System.out.println("llega aqui");
+            gamePlayer.addSalvo(salvo);//gamePlayer.getSalvoes().add(salvo);
+        salvoRepository.save(salvo);
+        return new ResponseEntity<>(makeMap("ok", "Salvoes saved"), HttpStatus.CREATED);}
 
     }
 
-    public boolean mismoTurn(GamePlayer gamePlayer,Salvo salvo){
+    public boolean equalTurn(GamePlayer gamePlayer,Salvo salvo){
        return gamePlayer.getSalvoes().stream().anyMatch(salvo1 -> salvo1.getTurn()==salvo.getTurn());
-    }*/
+    }
+
 }

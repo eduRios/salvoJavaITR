@@ -10,6 +10,7 @@ var salvoPositions = [];
 var waitState = false;
 
 postShipLocations(makePostUrl());
+postSalvo(makePostUrlSalvoes());
 refreshGameView(makeUrl());
 
 $('#logoutButton').on('click', function (event) {
@@ -321,7 +322,8 @@ function postShipLocations (postUrl) {
 function postSalvo (postUrl) {
     $.post({
         url: postUrl,
-        data: salvoJSON,
+        //data: salvoJSON,
+        data: JSON.stringify({turn: 3, locations: ["A1", "A2", "A3"]}),
         dataType: "text",
         contentType: "application/json"
     })

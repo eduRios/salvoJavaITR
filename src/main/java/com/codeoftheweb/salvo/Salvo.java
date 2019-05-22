@@ -33,6 +33,11 @@ public class Salvo {
         this.locations = locations;
     }
 
+    public Salvo(int turn, List<String> locations) {
+        this.turn = turn;
+        this.locations = locations;
+    }
+
     public Salvo() {
     }
 
