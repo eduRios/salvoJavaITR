@@ -70,6 +70,7 @@ public class SalvoController {
         dto.put("creationDate", game.getCreationDate());
         dto.put("gamePlayers", getGamePlayerList(game.getGamePlayers()));
         dto.put("scores", getScoreList(game.getScores()));
+
         return dto;
     }
 
@@ -125,6 +126,7 @@ public class SalvoController {
         dto.put("player", makePlayerDTO(gamePlayer.getPlayer()));
         dto.put("ships", getShipsList(gamePlayer.getShips()));
         dto.put("salvoes",getSalvoList(gamePlayer.getGame()));
+        dto.put("hits",makeHitsDTO(gamePlayer,conseguirOponente(gamePlayer)));
         return dto;
     }
     private List<Object> getPlayerList(){
@@ -185,6 +187,7 @@ public class SalvoController {
         dto.put("won", player.getWins(player.getScores()));
         dto.put("lost", player.getLoses(player.getScores()));
         dto.put("tied", player.getDraws(player.getScores()));
+
         return dto;
     }
 
@@ -326,6 +329,102 @@ public class SalvoController {
 
     public boolean equalTurn(GamePlayer gamePlayer,Salvo salvo){
        return gamePlayer.getSalvoes().stream().anyMatch(salvo1 -> salvo1.getTurn()==salvo.getTurn());
+    }
+
+    //
+    //punto 5 modulo 5
+    public void getHits(GamePlayer self, GamePlayer opponent){
+        //Set<String> myShips = self.getShips();
+
+    }
+
+    public Map<String, Object> makeHitsDTO(GamePlayer self, GamePlayer opponent){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("self", getHitsList(self.getSalvoes(),opponent.getShips()));
+        dto.put("opponent", getHitsList(opponent.getSalvoes(),self.getShips()));
+
+        return dto;
+    }
+    private List<Map<String, Object>> getHitsList(Set<Salvo> salvos,Set<Ship> ships){
+        return salvos
+                .stream()
+                .map(gamePlayer -> hitsDTO(gamePlayer,ships))
+                .collect(toList());
+    }
+    public Map<String, Object> hitsDTO(Salvo salvo, Set<Ship> ships){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+
+        dto.put("turn", salvo.getTurn());
+        dto.put("hitLocations", salvo.getLocations());
+        dto.put("damages", damageDTO(salvo,ships));
+       /* dto.put("missed",player);
+*/
+        return dto;
+    }
+
+    public Map<String, Object> damageDTO(Salvo salvo,Set<Ship> ships){
+        Map<String, Object> dto = new LinkedHashMap<String, Object>();
+        dto.put("carrierHits", verificarCoincidencias(salvo,ships,"cruiser"));
+        dto.put("battleshipHits", verificarCoincidencias(salvo,ships,"battleship"));
+        dto.put("submarineHits", verificarCoincidencias(salvo,ships,"submarine"));
+        dto.put("destroyerHits", verificarCoincidencias(salvo,ships,"destroyer"));
+        dto.put("patrolboatHits", verificarCoincidencias(salvo,ships,"patrolboat"));
+        //dto.put("carrier", player.getWins(player.getScores()));
+        //dto.put("battleship", player.getWins(player.getScores()));
+        //dto.put("submarine", player.getWins(player.getScores()));
+        //dto.put("destroyer", player.getWins(player.getScores()));
+        //dto.put("patrolboat", player.getWins(player.getScores()));
+        return dto;
+    }
+
+    public GamePlayer conseguirOponente(GamePlayer gamePlayer){
+        return gamePlayer.getGame().getGamePlayers().stream().filter(oponente -> oponente!=gamePlayer).findAny().get();
+    }
+
+    public int verificarCoincidencias(Salvo salvo,Set<Ship> ships,String type){
+        int pointCarrier =0, pointBattleship=0, pointSubmarine=0,pointDestroyer=0,pointPatrolboat=0;
+
+        for (Ship ship:ships) {
+            int points;
+            points = salvo.getLocations().stream().filter(location-> ship.coincidenSalvo(location)).collect(Collectors.toList()).size();
+
+
+            switch (ship.getType()){
+                case("cruiser"): pointCarrier = pointCarrier+points;
+                break;
+                case("battleship"): pointBattleship =pointBattleship+ points;
+                break;
+                case ("submarine"): pointSubmarine = pointSubmarine + points;
+                break;
+                case("destroyer"): pointDestroyer = pointDestroyer+points;
+                break;
+                case("patrolboat"): pointPatrolboat =pointPatrolboat+ points;
+                break;
+            }
+        }
+
+        if(type =="cruiser"){
+            return pointCarrier;
+        }else if(type=="battleship"){
+            return pointBattleship;
+        } else if(type=="submarine"){
+            return pointSubmarine;
+        }else if(type=="destroyer"){
+            return pointDestroyer;
+        }else if(type=="patrolboat"){
+            return pointPatrolboat;
+        }
+        /*
+        switch (type){
+            case("carrier"): return pointCarrier ;
+            case("battleship"): return pointBattleship;
+            case ("submarine"): return pointSubmarine;
+            case("destroyer"): return pointDestroyer;
+            case("patrolboat"): return pointPatrolboat;
+
+        }*/
+        return 0;
+
     }
 
 }

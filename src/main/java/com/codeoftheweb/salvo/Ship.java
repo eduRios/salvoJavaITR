@@ -67,5 +67,7 @@ public class Ship {
         this.gamePlayer = gamePlayer;
     }
 
-
+    public boolean coincidenSalvo(String location){
+        return locations.stream().anyMatch(shipLocation->shipLocation==location);
+    }
 }

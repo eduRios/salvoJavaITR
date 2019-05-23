@@ -71,21 +71,21 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			List<String> shipLocation5 = Arrays.asList("F4","F5","F6");
 
 			List<String> salvoLocation1 = Arrays.asList("A4","C5","F6");
-			List<String> salvoLocation2 = Arrays.asList("A1","B2","C3");
-			List<String> salvoLocation3 = Arrays.asList("H7","B1");
+			List<String> salvoLocation2 = Arrays.asList("A1","B2","H7");
+			List<String> salvoLocation3 = Arrays.asList("H7","A1");
 			List<String> salvoLocation4 = Arrays.asList("H1","H3");
 
 			Ship ship1 = new Ship("cruiser",shipLocation1,gamePlayer1);
-			Ship ship2 = new Ship("Battleship ",shipLocation2,gamePlayer3);
-			Ship ship3 = new Ship("Submarine",shipLocation3,gamePlayer2);
-			Ship ship4 = new Ship("Destroyer",shipLocation4,gamePlayer1);
-			Ship ship5 = new Ship("Patrol Boat",shipLocation5,gamePlayer6);
+			Ship ship2 = new Ship("battleship",shipLocation2,gamePlayer2);
+			Ship ship3 = new Ship("submarine",shipLocation3,gamePlayer2);
+			Ship ship4 = new Ship("destroyer",shipLocation4,gamePlayer1);
+			Ship ship5 = new Ship("patrolboat",shipLocation5,gamePlayer6);
 			Ship ship6 = new Ship("cruiser",shipLocation1,gamePlayer5);
 
 			Salvo salvo1 = new Salvo(gamePlayer1,1,salvoLocation1);
 			Salvo salvo2 = new Salvo(gamePlayer2,1,salvoLocation2);
 			Salvo salvo3 = new Salvo(gamePlayer1,2,salvoLocation3);
-			Salvo salvo4 = new Salvo(gamePlayer3,2,salvoLocation4);
+			Salvo salvo4 = new Salvo(gamePlayer2,2,salvoLocation4);
 			Salvo salvo5 = new Salvo(gamePlayer6,1,salvoLocation4);
 			Salvo salvo6 = new Salvo(gamePlayer5,1,salvoLocation2);
 
