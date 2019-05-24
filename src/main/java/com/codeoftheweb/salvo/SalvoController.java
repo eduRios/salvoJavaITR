@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo;
 
+import org.apache.tomcat.util.digester.ArrayStack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -126,7 +127,7 @@ public class SalvoController {
         dto.put("player", makePlayerDTO(gamePlayer.getPlayer()));
         dto.put("ships", getShipsList(gamePlayer.getShips()));
         dto.put("salvoes",getSalvoList(gamePlayer.getGame()));
-        dto.put("hits",makeHitsDTO(gamePlayer,conseguirOponente(gamePlayer)));
+        //dto.put("hits",makeHitsDTO(gamePlayer,conseguirOponente(gamePlayer)));
         return dto;
     }
     private List<Object> getPlayerList(){
@@ -331,7 +332,7 @@ public class SalvoController {
        return gamePlayer.getSalvoes().stream().anyMatch(salvo1 -> salvo1.getTurn()==salvo.getTurn());
     }
 
-    //
+    /*
     //punto 5 modulo 5
     public void getHits(GamePlayer self, GamePlayer opponent){
         //Set<String> myShips = self.getShips();
@@ -339,6 +340,7 @@ public class SalvoController {
     }
 
     public Map<String, Object> makeHitsDTO(GamePlayer self, GamePlayer opponent){
+        int ban;
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("self", getHitsList(self.getSalvoes(),opponent.getShips()));
         dto.put("opponent", getHitsList(opponent.getSalvoes(),self.getShips()));
@@ -353,12 +355,12 @@ public class SalvoController {
     }
     public Map<String, Object> hitsDTO(Salvo salvo, Set<Ship> ships){
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
-
+        int damgeCarrier =0, damageBattleship=0, damageSubmarine=0,damageDestroyer=0,damagePatrolboat=0;
         dto.put("turn", salvo.getTurn());
         dto.put("hitLocations", salvo.getLocations());
         dto.put("damages", damageDTO(salvo,ships));
-       /* dto.put("missed",player);
-*/
+        dto.put("missed",player);
+
         return dto;
     }
 
@@ -422,9 +424,37 @@ public class SalvoController {
             case("destroyer"): return pointDestroyer;
             case("patrolboat"): return pointPatrolboat;
 
-        }*/
+        }
         return 0;
 
     }
+*/
+/*    public GamePlayer conseguirOponente(GamePlayer gamePlayer){
+        return gamePlayer.getGame().getGamePlayers().stream().filter(oponente -> oponente!=gamePlayer).findAny().get();
+    }
 
+    public Map<String, Object> makeHitsDTO(GamePlayer self, GamePlayer opponent) {
+        List<Map<String, Object>> dto = new ArrayStack<>();
+        int damgeCarrier =0, damageBattleship=0, damageSubmarine=0,damageDestroyer=0,damagePatrolboat=0;
+        List<String> carrierLocations = new ArrayList<>();
+        List<String> destroyerLocations = new ArrayList<>();
+        List<String> submarineLocations = new ArrayList<>();
+        List<String> patrolboatLocations = new ArrayList<>();
+        List<String> battleshipLocations = new ArrayList<>();
+
+        for (Ship ship:self.getShips()) {
+            switch (ship.getType()){
+            case("cruises") : carrierLocations = ship.getLocations();
+            break;
+                case("battleship"): battleshipLocations = ship.getLocations();
+                break;
+                case ("submarine"): submarineLocations= ship.getLocations();
+                break;
+                case("destroyer"): destroyerLocations = ship.getLocations();
+                break;
+                case("patrolboat"): patrolboatLocations = ship.getLocations();
+                break;
+            }
+        }
+    }*/
 }
