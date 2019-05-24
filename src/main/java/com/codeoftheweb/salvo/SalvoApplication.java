@@ -71,9 +71,9 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			List<String> shipLocation5 = Arrays.asList("F4","F5","F6");
 
 			List<String> salvoLocation1 = Arrays.asList("A4","C5","F6");
-			List<String> salvoLocation2 = Arrays.asList("A1","B2","H7");
-			List<String> salvoLocation3 = Arrays.asList("H7","A1");
-			List<String> salvoLocation4 = Arrays.asList("H1","H3");
+			List<String> salvoLocation2 = Arrays.asList("A1","B2","H3");
+			List<String> salvoLocation3 = Arrays.asList("H7","B1");
+			List<String> salvoLocation4 = Arrays.asList("H1","H7");
 
 			Ship ship1 = new Ship("cruiser",shipLocation1,gamePlayer1);
 			Ship ship2 = new Ship("battleship",shipLocation2,gamePlayer2);
