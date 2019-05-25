@@ -63,35 +63,32 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			GamePlayer gamePlayer5 = new GamePlayer(p3,game3);
 			GamePlayer gamePlayer6 = new GamePlayer(p5,game3);
 
-
-			List<String> shipLocation1 = Arrays.asList("H1","H2","H3");
-			List<String> shipLocation2 = Arrays.asList("A1","B1","C1");
-			List<String> shipLocation3 = Arrays.asList("A4","A5","A6");
-			List<String> shipLocation4 = Arrays.asList("H7","H8","H9");
-			List<String> shipLocation5 = Arrays.asList("F4","F5","F6");
+			List<String> carrierLocations = Arrays.asList("H1","H2","H3","H4","H5");
+			List<String> battleshipLocations = Arrays.asList("A1","B1","C1","D1");
+			List<String> submarineLocations = Arrays.asList("A4","A5","A6");
+			List<String> destroyerLocations = Arrays.asList("H7","H8","H9");
+			List<String> patrolBoatLocations = Arrays.asList("F5","F6");
 
 			List<String> salvoLocation1 = Arrays.asList("A4","C5","F6");
 			List<String> salvoLocation2 = Arrays.asList("A1","B2","H3");
 			List<String> salvoLocation3 = Arrays.asList("H7","B1");
 			List<String> salvoLocation4 = Arrays.asList("H1","H7");
 
-			Ship ship1 = new Ship("cruiser",shipLocation1,gamePlayer1);
-			Ship ship2 = new Ship("battleship",shipLocation2,gamePlayer2);
-			Ship ship3 = new Ship("submarine",shipLocation3,gamePlayer2);
-			Ship ship4 = new Ship("destroyer",shipLocation4,gamePlayer1);
-			Ship ship5 = new Ship("patrolboat",shipLocation5,gamePlayer6);
-			Ship ship6 = new Ship("cruiser",shipLocation1,gamePlayer5);
+			Ship ship1 = new Ship("carrier",carrierLocations,gamePlayer1);
+			Ship ship2 = new Ship("battleship",battleshipLocations,gamePlayer2);
+			Ship ship3 = new Ship("submarine",submarineLocations,gamePlayer2);
+			Ship ship4 = new Ship("destroyer",destroyerLocations,gamePlayer1);
+			Ship ship5 = new Ship("patrolboat",patrolBoatLocations,gamePlayer6);
+			Ship ship6 = new Ship("carrier",carrierLocations,gamePlayer5);
 
 			Salvo salvo1 = new Salvo(gamePlayer1,1,salvoLocation1);
 			Salvo salvo2 = new Salvo(gamePlayer2,1,salvoLocation2);
 			Salvo salvo3 = new Salvo(gamePlayer1,2,salvoLocation3);
 			Salvo salvo4 = new Salvo(gamePlayer2,2,salvoLocation4);
 			Salvo salvo5 = new Salvo(gamePlayer6,1,salvoLocation4);
-			Salvo salvo6 = new Salvo(gamePlayer5,1,salvoLocation2);
+			Salvo salvo6 = new Salvo(gamePlayer5,1,salvoLocation1);
 
 			Date finishDate = new Date();
-
-
 
 			Score score1 = new Score(p1,game1,1,finishDate);
 			Score score2 = new Score(p1,game2,(float)0.5,finishDate);
@@ -172,7 +169,6 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
   }
 }
 //PUNTO 1 MODULO 5
-//@RequestMapping("/api")
 @EnableWebSecurity
 @Configuration
 class WebSecurityConfig  extends WebSecurityConfigurerAdapter {
