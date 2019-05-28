@@ -9,8 +9,8 @@ var salvoJSON;
 var salvoPositions = [];
 var waitState = false;
 
-postShipLocations(makePostUrl());
-postSalvo(makePostUrlSalvoes());
+//postShipLocations(makePostUrl());
+//postSalvo(makePostUrlSalvoes());
 refreshGameView(makeUrl());
 
 $('#logoutButton').on('click', function (event) {
@@ -47,6 +47,7 @@ function makeUrl() {
 
 function makePostUrl() {
     var gamePlayerID =  getParameterByName("gp");
+    console.log(gamePlayerID);//agregado
     return '/api/games/players/' + gamePlayerID + '/ships';
 }
 
@@ -170,7 +171,7 @@ function showSelf (gamePlayerData) {
     youID = "";
 
     gamePlayerData.gamePlayers.forEach(function(gamePlayer) {
-        if (gamePlayer.id == getParameterByName("gp")) {
+        if (gamePlayer.gpid == getParameterByName("gp")) {//cambie id
             you = gamePlayer.player.email;
             youID = gamePlayer.player.id;
         } else {
@@ -184,7 +185,7 @@ function showSelf (gamePlayerData) {
         $('#OpponentPlayerName').addClass('waitingPlayer');
     }
 
-    let DateCreated = new Date(gamePlayerData.created);
+    let DateCreated = new Date(gamePlayerData.creationDate);//created
     DateCreated = DateCreated.getMonth() + 1 + "/" + DateCreated.getDate() + " " + DateCreated.getHours() + ":" + DateCreated.getMinutes();
     $('#gamePlayerDetails').html('<span class="labelGame">Game ID: </span><span class="labelGameBig">' + gamePlayerData.id + '</span><span class="labelGame"> Created: </span><span class="labelGameBig">' + DateCreated + '</span>');
     $('#currentPlayerName').text(you);
@@ -293,9 +294,8 @@ function createTable(player) {
 function postShipLocations (postUrl) {
     $.post({
         url: postUrl,
-        //data: shipsJSON,
-        data: JSON.stringify([{type: "destroyer", locations: ["A1", "A2", "A3"]},{type: "destroyer", locations: ["A1", "A2", "A3"]}]),
-
+        data: shipsJSON,
+        //data: JSON.stringify([{type: "destroyer", locations: ["A1", "A2", "A3"]},{type: "destroyer", locations: ["A1", "A2", "A3"]}]),
         dataType: "text",
         contentType: "application/json"
     })
@@ -322,8 +322,8 @@ function postShipLocations (postUrl) {
 function postSalvo (postUrl) {
     $.post({
         url: postUrl,
-        //data: salvoJSON,
-        data: JSON.stringify({turn: 3, locations: ["A1", "A2", "A3"]}),
+        data: salvoJSON,
+       //data: JSON.stringify({turn: 3, locations: ["A1", "A2", "A3"]}),
         dataType: "text",
         contentType: "application/json"
     })
@@ -390,7 +390,7 @@ function makeSalvoJSON() {
         salvoPositions.push(salvo5cellID);
     }
     salvoObject = {
-        salvoLocations : salvoPositions
+        locations : salvoPositions//salvoLocations : salvoPositions
     }
 
     salvoJSON = JSON.stringify(salvoObject);
