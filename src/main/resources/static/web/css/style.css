@@ -1,4 +1,8 @@
-body {
+.fondoGames {
+    background: url(../img/back7.jpg);
+    font-family: 'Dosis', sans-serif;
+}
+.fondoGame {
     background: url(../img/back5.jpg);
     font-family: 'Dosis', sans-serif;
 }
@@ -73,7 +77,8 @@ body {
 
 #signupSuccess {
     display: none;
-    background-color: darkorange;
+    /*background-color: darkorange;*/
+    background-color: #4BBAC3;
     color: black;
     padding: 10px;
 }
@@ -129,7 +134,7 @@ body {
 }
 
 .hitCell {
-    background-image: url(../img/hit3.gif);
+    background-image: url(../img/hit.gif);
     background-size: cover;
 }
 
@@ -367,11 +372,12 @@ button:focus {
 
 .yellow500 {
     font-weight: 600;
-    color: #ffc107;
+    color: #4BBAC3;
 }
 
 #scoreBoard > tbody > tr:first-child > td {
-    color: #ffc107;
+    font-weight: 300;
+    color: #4BBAC3;
 }
 
 #createGame {
@@ -511,4 +517,11 @@ button:focus {
 
 }
 
-
+footer{
+    /*background: #00F;*/
+    margin:15px auto;
+    font-weight: 700;
+    clear: both;
+    color: #FFF;
+    text-align: center;
+}
