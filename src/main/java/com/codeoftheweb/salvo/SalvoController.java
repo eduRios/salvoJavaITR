@@ -95,9 +95,22 @@ public class SalvoController {
 
     //------------------------------Devuelve game_view de los jugadores del jugador registrado------------------------
     @RequestMapping("/game_view/{id}")
+    public ResponseEntity<Map<String, Object>> getGameView(@PathVariable Long id, Authentication authentication) {
+        authentication = SecurityContextHolder.getContext().getAuthentication();
+        GamePlayer gamePlayer = gamePlayerRepository.findById(id).get();
+        Player player = gamePlayer.getPlayer();
+        Player authenticationPlayer = getAuthentication(authentication);
+        GamePlayer opponentGamePlayer = gamePlayer.getGame().getGamePlayers().stream().filter(gpo ->gpo.getId() != gamePlayer.getId()).findFirst().orElse(null);
+        if(authenticationPlayer.getId() == player.getId()){
+            return new ResponseEntity<>(gamePlayerViewDTO(gamePlayerRepository.findById(id).get()), HttpStatus.ACCEPTED);}
+        else{
+            return new ResponseEntity<>(makeMap("error", "Usuario no autorizado"), HttpStatus.UNAUTHORIZED);
+        }
+    }
+/*
     private Map<String, Object> getGames(@PathVariable Long id) {
         return  gamePlayerViewDTO(gamePlayerRepository.findById(id).get());
-    }
+    }*/
     /*
     public ResponseEntity<Map<String, Object>> getGames(@PathVariable Long id, Authentication authentication) {
         authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -373,7 +386,7 @@ public class SalvoController {
 
     //------------------------------------punto 5 modulo 5  DETECTAR HITS Y SKINS DE CADA JUEGO-----------------------
     public GamePlayer conseguirOponente(GamePlayer gamePlayer) {
-        return gamePlayer.getGame().getGamePlayers().stream().filter(oponente -> oponente.getId() != gamePlayer.getId()).findAny().get();
+        return gamePlayer.getGame().getGamePlayers().stream().filter(oponente -> oponente.getId() != gamePlayer.getId()).findAny().orElse(new GamePlayer());
     }
 
     public Map<String, Object> makeHitsDTO(GamePlayer self, GamePlayer opponent) {
@@ -417,7 +430,6 @@ public class SalvoController {
 
         List<Salvo> salvoOrden = opponent.getSalvoes().stream()
                 .sorted(Comparator.comparingInt(Salvo::getTurn))
-                //.sorted(Comparator.comparing(Salvo::getTurn))
                 .collect(toList());
 
         for (Salvo salvo : salvoOrden) {
