@@ -70,4 +70,12 @@ public class Game {
     public void setScores(Set<Score> scores) {
         this.scores = scores;
     }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+                "id=" + id +
+                ", creationDate=" + creationDate+
+                '}';
+    }
 }

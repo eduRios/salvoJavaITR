@@ -80,6 +80,14 @@ public class Player {
         this.password = password;
     }
 
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 
     public float getScore(Player player) {
         return getWins(player.getScores())+ getDraws(player.getScores())*(float)0.5 + getLoses(player.getScores())*0;
