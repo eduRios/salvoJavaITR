@@ -245,6 +245,9 @@ public class SalvoController {
             return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
         }
 
+        if (username.length()>30)
+            return new ResponseEntity<>(makeMap("error", "Maximo de caracteres"), HttpStatus.FORBIDDEN);
+
         playerRepository.save(new Player(username, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
