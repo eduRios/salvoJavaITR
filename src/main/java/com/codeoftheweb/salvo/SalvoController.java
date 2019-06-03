@@ -85,8 +85,12 @@ public class SalvoController {
         dto.put("creationDate", gamePlayer.getCreationDate());
         dto.put("gameState",getGameState(gamePlayer));
         dto.put("gamePlayers", getGamePlayerList(gamePlayer.getGame().getGamePlayers()));
-        dto.put("ships", getShipsList(gamePlayer.getShips()));
 
+        if (gamePlayer.getShips().isEmpty()) {
+            dto.put("ships", new ArrayList<>());
+        }else{
+            dto.put("ships", getShipsList(gamePlayer.getShips()));
+        }
         if(conseguirOponente(gamePlayer) == null || gamePlayer.getSalvoes().isEmpty()) {
             dto.put("salvoes", new ArrayList<>());
         }else {
@@ -95,7 +99,7 @@ public class SalvoController {
         if (conseguirOponente(gamePlayer).getShips().isEmpty() || conseguirOponente(gamePlayer).getSalvoes().isEmpty()) {
             dto.put("hits", EmptyHits());
         }else {
-            dto.put("hits",getHitsList(gamePlayer,conseguirOponente(gamePlayer)));
+            dto.put("hits",makeHitsDTO(gamePlayer,conseguirOponente(gamePlayer)));
        }
         return dto;
     }
@@ -128,6 +132,7 @@ public class SalvoController {
         return getPlayerList();
     }
 
+    //Utilizado anteriormente por leaderboard Crear lista de distintos players
     private List<Object> getPlayerList(){
         return playerRepository
                 .findAll()
@@ -155,7 +160,6 @@ public class SalvoController {
     }
 
     //-------------------------------List y DTO de Ships--------------------------------------
-    //Utilizado anteriormente por leaderboard Crear lista de distintos players
     public List<Object> getShipsList(Set<Ship> ships) {
         return ships
                 .stream()
@@ -376,64 +380,6 @@ public class SalvoController {
         return gamePlayer.getGame().getGamePlayers().stream().filter(oponente -> oponente.getId() != gamePlayer.getId()).findAny().orElse(new GamePlayer());
     }
 
-    private  Map<String, Object> getHitsList(GamePlayer selfGP,GamePlayer opponentGP){
-        Map<String, Object> dto = new LinkedHashMap<>();
-        dto.put("self", getHits(opponentGP.getSalvoes(), selfGP.getShips()));
-        dto.put("opponent", getHits(selfGP.getSalvoes(), opponentGP.getShips()));
-        return dto;
-    }
-
-    private List <Map> getHits(Set <Salvo> salvoesopponent, Set <Ship> shipsself) {
-
-        List <Salvo> salvoOrden = salvoesopponent.stream().sorted(Comparator.comparingInt(Salvo::getTurn)).collect(toList());
-
-        List <Map> hits = new ArrayList < > (); //lista de map
-        Map <String, Integer> damageTotal = new HashMap <String, Integer> ();
-
-        //Recorro la lista de tiros del oponente
-        for (Salvo salvo: salvoOrden) {
-            Map < String, Object > damageIndiv = new LinkedHashMap < > ();
-            Map < String, Object > damages = new LinkedHashMap < > ();
-            Map < String, Object > dto = new LinkedHashMap < > (); //dentro del for asi no se pisa
-
-            //Del salvo obtengo las localizaciones y las convierto en stream el cual tiene la funcion de flatmap que convierte la lista en un stream de stream de strings las cuales contienen las localizaciones de los ships comparadas con las localizaciones del salvo
-            List<String> celdasAcertadas = salvo.getLocations().stream().flatMap(salvoLocIndiv -> shipsself.stream().flatMap(ship -> ship.getLocations().stream().filter(shipLocIndiv -> shipLocIndiv.equals(salvoLocIndiv)))).collect(toList());
-
-            //Contador de daños totales e individuales
-            for (Ship ship: shipsself) {
-                Integer contadorDaño = damageTotal.get(ship.getType().toLowerCase());
-                Integer daño = (int) ship.getLocations().stream().filter(shipLoc -> celdasAcertadas.contains(shipLoc)).count();
-                if (contadorDaño != null) {
-                    damageTotal.put(ship.getType().toLowerCase(), contadorDaño + daño);
-                } else {
-                    damageTotal.put(ship.getType().toLowerCase(), daño);
-                }
-                damageIndiv.put(ship.getType().toLowerCase() + "Hits", daño);
-            }
-
-            int missed = salvo.getLocations().size() - celdasAcertadas.size();
-
-            damages.put("carrierHits", damageIndiv.get("carrierHits"));
-            damages.put("battleshipHits", damageIndiv.get("battleshipHits"));
-            damages.put("submarineHits", damageIndiv.get("submarineHits"));
-            damages.put("destroyerHits", damageIndiv.get("destroyerHits"));
-            damages.put("patrolboatHits", damageIndiv.get("patrolboatHits"));
-
-            damages.put("carrier", damageTotal.get("carrier"));
-            damages.put("battleship", damageTotal.get("battleship"));
-            damages.put("submarine", damageTotal.get("submarine"));
-            damages.put("destroyer", damageTotal.get("destroyer"));
-            damages.put("patrolboat", damageTotal.get("patrolboat"));
-            //Informacion del turno
-            dto.put("turn", salvo.getTurn());
-            dto.put("hitLocations", celdasAcertadas);
-            dto.put("damages", damages);
-            dto.put("missed", missed);
-            hits.add(dto);
-        }
-        return hits;
-    }
-
     public Map<String, Object> makeHitsDTO(GamePlayer self, GamePlayer opponent) {
         Map<String, Object> dto = new LinkedHashMap<String, Object>();
         dto.put("self", getHits(self, opponent));
@@ -540,14 +486,6 @@ public class SalvoController {
         return dto;
     }
 
-    private Optional<GamePlayer> GetOpponent(Game game,
-                                             GamePlayer gamePlayer) {
-        return game.getGamePlayers()
-                .stream()
-                .filter(opponent -> gamePlayer.getId() != opponent.getId())
-                .findFirst();
-    }
-
     private String getGameState(GamePlayer selfGamePlayer) {
         GamePlayer opponentGamePlayer = conseguirOponente(selfGamePlayer);
         if (selfGamePlayer.getShips().size() == 0) {
@@ -596,7 +534,6 @@ public class SalvoController {
         if (selfGamePlayer.getSalvoes().size() != turn) {
             return "PLAY";
         }
-
         return "WAIT";
     }
 
@@ -692,14 +629,5 @@ public class SalvoController {
         dto.put("destroyer", destroyerDamage);
         dto.put("patrolboat", patrolboatDamage);
         return dto;
-    }
-    private  Boolean existScore2(Score score, Game game){
-        Set<Score> scores = game.getScores();
-        for(Score s : scores){
-            if(score.getPlayer().getUserName().equals(s.getPlayer().getUserName())){
-                return true;
-            }
-        }
-        return false;
     }
 }
